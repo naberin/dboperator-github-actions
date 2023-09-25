@@ -1,0 +1,44 @@
+
+name: Create Isolated Database
+
+on:
+  create:
+    branches: [ "feature/**" ]
+
+jobs:
+  create:
+    name: Create Database
+    runs-on: ubuntu-latest
+    env:
+      OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
+      OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
+      OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
+      OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
+      OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Set up kustomize
+    - name: Set up Kustomize
+      run: |-
+        curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - name: Configure Kubectl
+      uses: oracle-actions/configure-kubectl-oke@v1.3.2
+      id: test-configure-kubectl-oke-action
+      with:
+        cluster: ${{ secrets.OKE_CLUSTER_OCID }}
+
+    - name: Run Kubectl
+      run: kubectl get nodes -A
+
+    # Deploy the Docker image to the GKE cluster
+#    - name: Deploy
+#      run: |-
+#        ./generate.sh
+
+
