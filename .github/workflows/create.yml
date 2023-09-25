@@ -33,12 +33,18 @@ jobs:
       with:
         cluster: ${{ secrets.OKE_CLUSTER_OCID }}
 
+    # Test access
     - name: Run Kubectl
       run: kubectl get nodes -A
 
-    # Deploy the Docker image to the GKE cluster
-#    - name: Deploy
-#      run: |-
-#        ./generate.sh
+    # Create secret
+    - name: Create Secret for Namespace
+      run: |-
+        kubectl create secret -n "$NAMESPACE"  generic default-admin-password --from-literal=admin-password="${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}"
+
+     # Generate file
+    - name: Deploy
+      run: |-
+        ./generate.sh
 
 

@@ -1,0 +1,13 @@
+---
+apiVersion: database.oracle.com/v1alpha1
+kind: AutonomousDatabase
+metadata:
+  name: adb-
+  namespace: default
+spec:
+  details:
+    cpuCoreCount: 1
+    adminPassword:
+      k8sSecret:
+        name: default-admin-password
+    dataStorageSizeInTBs: 1
