@@ -5,12 +5,9 @@ on:
   create:
     branches: [ "feature/**" ]
 
-env:
-  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-
 jobs:
-  install:
-    name: Install If Not Exists
+  create:
+    name: Create Database
     runs-on: ubuntu-latest
     env:
       OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
@@ -23,6 +20,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    # Set up kustomize
+    - name: Set up Kustomize
+      run: |-
+        curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+
     # Get the GKE credentials so we can deploy to the cluster
     - name: Configure Kubectl
       uses: oracle-actions/configure-kubectl-oke@v1.3.2
@@ -30,16 +33,12 @@ jobs:
       with:
         cluster: ${{ secrets.OKE_CLUSTER_OCID }}
 
-    # Set up kustomize
-    - name: Set up Kustomize
-      run: |-
-        curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-        chmod u+x ./kustomize
+    - name: Run Kubectl
+      run: kubectl get nodes -A
+
     # Deploy the Docker image to the GKE cluster
-    - name: Deploy
-      run: |-
-        # replacing the image name in the k8s template
-        ./kustomize edit set image LOCATION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE:TAG=$GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$GITHUB_SHA
-        ./kustomize build . | kubectl apply -f -
-        kubectl rollout status deployment/$DEPLOYMENT_NAME
-        kubectl get services -o wide
+#    - name: Deploy
+#      run: |-
+#        ./generate.sh
+
+
