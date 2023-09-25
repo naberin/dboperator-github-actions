@@ -1,4 +1,4 @@
-name: Create Isolated Database
+name: Cleanup feature branch deletion
 
 on:
   delete:

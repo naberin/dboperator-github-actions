@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # set token
-IDENTIFICATION=$(python3 get.py "$GITHUB_REF_NAME")
+IDENTIFICATION=$(python3 get.py "${{ github.event.ref }}")
 NAMESPACE="ft-$IDENTIFICATION"
 PATCH_LOC="${{ runner.temp }}"/patch.yaml
 
