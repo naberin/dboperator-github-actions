@@ -14,8 +14,8 @@ def get_identification(from_feature_name):
 
     listing = from_feature_name.split("/")
     for i in range(len(listing)):
-        if listing[i] == "feature" and i+1 < len(listing):
-            return listing[i+1]
+        if listing[i].lower().startswith("feature") and i+1 < len(listing):
+            return listing[i+1].lower()
 
 
 print(get_identification(get_feature_name(sys.argv)))
