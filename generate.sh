@@ -22,7 +22,7 @@ fi
 kustomize create --resources base
 
 # create patch
-cat <<EOF > "$PATCH_LOC"
+cat <<EOF > patch.yaml
 - op: add # action
   path: "/spec/details/compartmentOCID"
   value: ${COMPARTMENT_OCID}
@@ -36,8 +36,11 @@ EOF
 
 # replacing the image name in the k8s template
 kustomize edit set namesuffix "$IDENTIFICATION"
-kustomize edit add patch --path "$PATCH_LOC" --kind AutonomousDatabase
+kustomize edit add patch --path patch.yaml --kind AutonomousDatabase
 kustomize edit set namespace "$NAMESPACE"
 
 # kubectl apply
 kustomize build . | kubectl -n "$NAMESPACE" apply -f -
+
+# move
+mv patch.yaml "$PATCH_LOC"
