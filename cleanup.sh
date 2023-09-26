@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IDENTIFICATION=$(python3 get.py "${{ github.event.ref }}")
+IDENTIFICATION=$(python get.py "$BRANCH_REF")
 NAMESPACE="ft-$IDENTIFICATION"
 
 # delete

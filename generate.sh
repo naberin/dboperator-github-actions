@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # set token
-IDENTIFICATION=$(python3 get.py "${{ github.event.ref }}")
+IDENTIFICATION=$(python get.py "$BRANCH_REF")
 NAMESPACE="ft-$IDENTIFICATION"
-PATCH_LOC="${{ runner.temp }}"/patch.yaml
+PATCH_LOC="${TEMP_LOCATION}/patch.yaml"
 
 #  create namespace
 kubectl create namespace "$NAMESPACE"
 
 # create secret
-kubectl create secret -n "$NAMESPACE"  generic default-admin-password --from-literal=admin-password="${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}"
+kubectl create secret -n "$NAMESPACE"  generic default-admin-password --from-literal=admin-password="$OP_DEF_PWD"
 
 
 

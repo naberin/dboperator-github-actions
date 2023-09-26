@@ -15,6 +15,9 @@ jobs:
       OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
       OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
       OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
+      OP_DEF_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
+      BRANCH_REF: ${{ github.event.ref }}
+      TEMP_LOCATION: ${{ runner.temp }}
 
     steps:
     - name: Checkout
