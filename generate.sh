@@ -3,7 +3,7 @@
 # set token
 IDENTIFICATION=$(python get.py "$BRANCH_REF")
 NAMESPACE="ft-$IDENTIFICATION"
-PATCH_LOC="${TEMP_LOCATION}/patch.yaml"
+PATCH_LOC="${RUNNER_TEMP}/patch.yaml"
 
 #  create namespace
 kubectl create namespace "$NAMESPACE"
