@@ -8,6 +8,11 @@ PATCH_LOC="${{ runner.temp }}"/patch.yaml
 #  create namespace
 kubectl create namespace "$NAMESPACE"
 
+# create secret
+kubectl create secret -n "$NAMESPACE"  generic default-admin-password --from-literal=admin-password="${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}"
+
+
+
 # kustomize remove if exists
 if test -f "kustomization.yaml"; then
   rm kustomization.yaml
