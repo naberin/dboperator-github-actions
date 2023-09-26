@@ -4,7 +4,7 @@
 IDENTIFICATION=$(python get.py "$BRANCH_REF")
 NAMESPACE="ft-$IDENTIFICATION"
 PATCH_LOC="${RUNNER_TEMP}/patch.yaml"
-DBNAME=$(python clean.py "$IDENTIFICATION")
+DBNAME=$(python clean_dbname.py "$IDENTIFICATION")
 
 #  create namespace
 kubectl create namespace "$NAMESPACE"
