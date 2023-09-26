@@ -9,9 +9,7 @@ PATCH_LOC="${RUNNER_TEMP}/patch.yaml"
 kubectl create namespace "$NAMESPACE"
 
 # create secret
-kubectl create secret -n "$NAMESPACE"  generic default-admin-password --from-literal=admin-password="$OP_DEF_PWD"
-
-
+kubectl create secret -n "$NAMESPACE"  generic default-admin-password --from-literal=default-admin-password="$OP_DEF_PWD"
 
 # kustomize remove if exists
 if test -f "kustomization.yaml"; then
@@ -40,7 +38,7 @@ kustomize edit add patch --path patch.yaml --kind AutonomousDatabase
 kustomize edit set namespace "$NAMESPACE"
 
 # kubectl apply
-kustomize build . | kubectl -n "$NAMESPACE" apply -f -
+kustomize build . | kubectl apply -f -
 
 # move
 mv patch.yaml "$PATCH_LOC"
