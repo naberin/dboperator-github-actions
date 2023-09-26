@@ -18,4 +18,6 @@ def get_identification(from_feature_name):
             return listing[i+1].lower()
 
 
-print(get_identification(get_feature_name(sys.argv)))
+names = get_feature_name(sys.argv)
+ident = get_identification(names)
+print(ident)

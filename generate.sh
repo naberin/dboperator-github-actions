@@ -4,12 +4,13 @@
 IDENTIFICATION=$(python get.py "$BRANCH_REF")
 NAMESPACE="ft-$IDENTIFICATION"
 PATCH_LOC="${RUNNER_TEMP}/patch.yaml"
+DBNAME=$(python clean.py "$IDENTIFICATION")
 
 #  create namespace
 kubectl create namespace "$NAMESPACE"
 
 # create secret
-kubectl create secret -n "$NAMESPACE"  generic default-admin-password --from-literal=default-admin-password="$OP_DEF_PWD"
+kubectl create secret -n "$NAMESPACE" generic default-admin-password --from-literal=default-admin-password="$OP_DEF_PWD"
 
 # kustomize remove if exists
 if test -f "kustomization.yaml"; then
@@ -26,7 +27,7 @@ cat <<EOF > patch.yaml
   value: ${COMPARTMENT_OCID}
 - op: add # action
   path: "/spec/details/dbName"
-  value: db${IDENTIFICATION}
+  value: db${DBNAME}
 - op: add # action
   path: "/spec/details/displayName"
   value: dbtest-${IDENTIFICATION}
