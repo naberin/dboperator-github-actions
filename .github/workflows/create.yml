@@ -57,13 +57,13 @@ jobs:
     # Run Kustomize and Deploy
     - name: Deploy ADB
       run: |-
-      ./generate.sh
-      kustomize create --resources base
-      kustomize edit set namesuffix ${{ steps.getname.outputs.idname }}
-      kustomize edit add patch --path patch.yaml --kind AutonomousDatabase
-      kustomize edit set namespace ft-${{ steps.getname.outputs.idname }}
-      kustomize build . | kubectl apply -f -
-      mv patch.yaml "$RUNNER_TEMP/patch.yaml"
+        ./generate.sh
+        kustomize create --resources base
+        kustomize edit set namesuffix ${{ steps.getname.outputs.idname }}
+        kustomize edit add patch --path patch.yaml --kind AutonomousDatabase
+        kustomize edit set namespace ft-${{ steps.getname.outputs.idname }}
+        kustomize build . | kubectl apply -f -
+        mv patch.yaml "$RUNNER_TEMP/patch.yaml"
 
     # # Wait for database to get ready
     # - name: Wait for DB Availability
