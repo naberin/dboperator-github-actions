@@ -19,9 +19,16 @@ jobs:
       BRANCH_REF: ${{ github.event.ref }}
       COMPARTMENT_OCID: ${{ secrets.OCI_COMPARTMENT_OCID }}
 
+    outputs:
+      idname: ${{ steps.getname.outputs.idname}}
+
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+
+    - name: Retrieve DBName
+      id: getname
+      run: echo "idname=$(python get.py "$BRANCH_REF")" >> "$GITHUB_OUTPUT"
 
     # Set up kustomize
     - name: Set up Kustomize
@@ -41,9 +48,53 @@ jobs:
       run: kubectl get nodes -A
 
 
-     # Generate file
-    - name: Deploy
+     # Create Namespace and Secret
+    - name: Create Kubernetes resources
       run: |-
-        ./generate.sh
+        kubectl create namespace ft-${{ steps.getname.outputs.idname }}
+        kubectl create secret -n ft-${{ steps.getname.outputs.idname }} generic default-admin-password --from-literal=default-admin-password="$OP_DEF_PWD"
+
+    # Run Kustomize and Deploy
+    - name: Deploy ADB
+      run: |-
+      ./generate.sh
+      kustomize create --resources base
+      kustomize edit set namesuffix ${{ steps.getname.outputs.idname }}
+      kustomize edit add patch --path patch.yaml --kind AutonomousDatabase
+      kustomize edit set namespace ft-${{ steps.getname.outputs.idname }}
+      kustomize build . | kubectl apply -f -
+      mv patch.yaml "$RUNNER_TEMP/patch.yaml"
+
+    # # Wait for database to get ready
+    # - name: Wait for DB Availability
+    #   id: getready
+    #   run: |-
+
+    # # Get DB Name
+    # - name: 
+
+    # Get DB OCID
+
+  # setup:
+  #   name: Setup Database
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     DB_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v3
+      
+
+  #   # Download Wallet
+  #   - name: "Download Wallet"
+  #     run: 
+
+  #   # Download SQLCL
 
 
+  #   # Run LB
+  #   - name: "Run admin"
+      
+
+    # Loop through Schemas
+      
