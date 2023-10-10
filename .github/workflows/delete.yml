@@ -15,7 +15,7 @@ jobs:
       OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
       OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
       BRANCH_REF: ${{ github.event.ref }}
-      IDNAME: ${{ steps.getname.outputs.dbname }}
+
     steps:
       # checkout
       - name: Checkout
@@ -24,17 +24,17 @@ jobs:
       - name: Retrieve DBName
         id: getname
         run: |-
-          run: echo "dbname=$(python get.py "$BRANCH_REF")" >> "$GITHUB_OUTPUT"
+          run: echo "idname=$(python get.py "$BRANCH_REF")" >> "$GITHUB_OUTPUT"
 
       # Get the GKE credentials so we can deploy to the cluster
       - name: Configure Kubectl
         uses: oracle-actions/configure-kubectl-oke@v1.3.2
-        id: test-configure-kubectl-oke-action
+        id: configure-kubectl-oke-action
         with:
           cluster: ${{ secrets.OKE_CLUSTER_OCID }}
 
       # Run Kubectl commands to delete adb and namespace
       - name: Delete resources
         run: |-
-          kubectl delete adb "adb-$IDNAME" -n "ft-$IDNAME"
-          kubectl delete namespace "ft-$IDNAME"
+          kubectl delete adb adb-${{ steps.getname.outputs.idname }} -n ft-${{ steps.getname.outputs.idname }}
+          kubectl delete namespace ft-${{ steps.getname.outputs.idname }}
