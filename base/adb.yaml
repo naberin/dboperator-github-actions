@@ -11,3 +11,4 @@ spec:
       k8sSecret:
         name: default-admin-password
     dataStorageSizeInTBs: 1
+  hardLink: true
