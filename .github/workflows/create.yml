@@ -75,8 +75,7 @@ jobs:
     - name: Retrieve DBOCID
       id: getocid
       run: |-
-
-      echo "dbocid=$(kubectl get adb adb-${{ steps.getname.outputs.idname }} -n ft-${{ steps.getname.outputs.idname }} -o 'jsonpath={.spec.details.compartmentOCID}')" >> "$GITHUB_OUTPUT"
+        echo "dbocid=$(kubectl get adb adb-${{ steps.getname.outputs.idname }} -n ft-${{ steps.getname.outputs.idname }} -o 'jsonpath={.spec.details.compartmentOCID}')" >> "$GITHUB_OUTPUT"
 
   # Get DB OCID
   setup:
