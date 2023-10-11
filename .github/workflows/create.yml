@@ -18,6 +18,7 @@ jobs:
       OP_DEF_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
       BRANCH_REF: ${{ github.event.ref }}
       COMPARTMENT_OCID: ${{ secrets.OCI_COMPARTMENT_OCID }}
+      DB_WALLET_PWD: ${{ secrets.DB_WALLET_PASSWORD }}
 
     outputs:
       idname: ${{ steps.getname.outputs.idname}}
@@ -65,32 +66,39 @@ jobs:
         kustomize build . | kubectl apply -f -
         mv patch.yaml "$RUNNER_TEMP/patch.yaml"
 
-    # # Wait for database to get ready
-    # - name: Wait for DB Availability
-    #   id: getready
-    #   run: |-
+    # Wait for database to get ready
+    - name: Wait for Database
+      id: getready
+      run: |-
+        ./query-for-db.sh ${{ steps.getname.outputs.idname }}
 
-    # # Get DB Name
-    # - name: 
+    - name: Retrieve DBOCID
+      id: getocid
+      run: echo "dbocid=$(kubectl get -n ft-${{ steps.getname.outputs.idname }} adb adb-${{ steps.getname.outputs.idname }} -o 'jsonpath={.spec.details.compartmentOCID}'" >> "$GITHUB_OUTPUT"
 
-    # Get DB OCID
-
-  # setup:
-  #   name: Setup Database
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     DB_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
-  #   steps:
-  #   - name: Checkout
-  #     uses: actions/checkout@v3
+  # Get DB OCID
+  setup:
+    name: Setup Database
+    runs-on: ubuntu-latest
+    env:
+      DB_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
       
 
-  #   # Download Wallet
-  #   - name: "Download Wallet"
-  #     run: 
+    # Download Wallet
+    - name: "Download Wallet"
+      uses: oracle-actions/run-oci-cli-command@v1.1.1
+      id: download-database-wallet
+        with:
+          command: 'db autonomous-database generate-wallet --autonomous-database-id ${{ steps.getocid.outputs.dbocid }} --password $DB_WALLET_PWD --file wallet.zip'
+        
 
-  #   # Download SQLCL
-
+    # Download SQLCL
+    - name: "Download SQLCL"
+      run: |-
+        echo ${{ steps.getocid.outputs.dbocid }}
 
   #   # Run LB
   #   - name: "Run admin"
