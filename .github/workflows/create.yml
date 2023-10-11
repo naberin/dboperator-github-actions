@@ -21,7 +21,8 @@ jobs:
       DB_WALLET_PWD: ${{ secrets.DB_WALLET_PASSWORD }}
 
     outputs:
-      idname: ${{ steps.getname.outputs.idname}}
+      idname: ${{ steps.getname.outputs.idname }}
+      dbocid: ${{ steps.getocid.outputs.dbocid }}
 
     steps:
     - name: Checkout
