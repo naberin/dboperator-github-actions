@@ -82,17 +82,21 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DB_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
+      OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
+      OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
+      OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
+      OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
+      OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
+      
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-      
 
-    # Download Wallet
     - name: "Download Wallet"
       uses: oracle-actions/run-oci-cli-command@v1.1.1
       id: download-database-wallet
-        with:
-          command: 'db autonomous-database generate-wallet --autonomous-database-id ${{ steps.getocid.outputs.dbocid }} --password $DB_WALLET_PWD --file wallet.zip'
+      with:
+        command: 'db autonomous-database generate-wallet --autonomous-database-id ${{ steps.getocid.outputs.dbocid }} --password $DB_WALLET_PWD --file wallet.zip'
         
 
     # Download SQLCL
