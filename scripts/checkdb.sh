@@ -5,7 +5,7 @@ IDENTIFICATION=$1
 while : ; do
     
     # get status
-    STATUS=$(kubectl get -n "feature-$IDENTIFICATION" singleinstancedatabase "freedb-$IDENTIFICATION" -o 'jsonpath={.status.Status}')
+    STATUS=$(kubectl get -n "feature-$IDENTIFICATION" singleinstancedatabase "freedb-$IDENTIFICATION" -o 'jsonpath={.status.status}')
     # if database is available, end while loop; else sleep
     if [[ "$STATUS" == "Healthy" ]]; then
         break;
