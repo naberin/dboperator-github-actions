@@ -23,7 +23,7 @@ jobs:
 
       - name: Retrieve DBName
         id: getname
-        run: echo "idname=$(python scripts/run_util id "$BRANCH_REF")" >> "$GITHUB_OUTPUT"
+        run: echo "idname=$(python scripts/run_util.py id "$BRANCH_REF")" >> "$GITHUB_OUTPUT"
 
       # Get the GKE credentials so we can deploy to the cluster
       - name: Configure Kubectl
