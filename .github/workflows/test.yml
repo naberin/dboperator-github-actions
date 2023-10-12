@@ -12,11 +12,12 @@ jobs:
       OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
       OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
       OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
-
+      DBOCID: ${{ secrets.DBOCID }}
+      DBPWD: ${{ secrets.DB_WALLET_PASSWORD }}
     steps:
       - name: Retrieve the OCID of a named compartment in tenancy
         uses: oracle-actions/run-oci-cli-command@v1.1.1
         id: find-compartment-id
         with:
-            command: 'iam compartment list --compartment-id-in-subtree=true'
-            query: "data[?name=='testing'].id"
+          command: "db autonomous-database generate-wallet --autonomous-database-id $DBOCID --password $DBPWD --file wallet.zip --debug"
+          silent: false
