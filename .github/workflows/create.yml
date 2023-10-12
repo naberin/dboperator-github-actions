@@ -100,7 +100,7 @@ jobs:
       uses: oracle-actions/run-oci-cli-command@v1.1.1
       id: download-database-wallet
       with:
-        command: 'db autonomous-database generate-wallet --autonomous-database-id $DB_OCID --password $DB_WALLET_PWD --file wallet.zip'
+        command: "db autonomous-database generate-wallet --autonomous-database-id $DB_OCID --password $DB_WALLET_PWD --file wallet.zip"
         silent: false
 
     # Download SQLCL
