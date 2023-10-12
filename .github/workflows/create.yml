@@ -58,7 +58,7 @@ jobs:
     # Run Kustomize and Deploy
     - name: Deploy SIDB Free
       run: |-
-        kustomize create --resources base
+        kustomize create --resources base/sidb-free
         kustomize edit set namesuffix ${{ steps.getname.outputs.idname }}
         kustomize edit set namespace feature-${{ steps.getname.outputs.idname }}
         kustomize build . | kubectl apply -f -
