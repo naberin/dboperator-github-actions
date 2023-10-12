@@ -26,12 +26,12 @@ def get_identification(from_feature_name):
             return listing[i+1].lower()
 
 
-# expects [command] [inputs]
+# expects [filename] [command] [inputs]
 command = sys.argv[1]
 
 if command == "dbname":
     print(clean(sys.argv[2]))
-elif command == "id"
+elif command == "id":
     names = get_feature_name(sys.argv[2:])
     ident = get_identification(names)
     print(ident)
