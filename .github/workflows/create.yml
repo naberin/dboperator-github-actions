@@ -4,17 +4,17 @@ name: Create Isolated Database
 on:
   create:
     branches: [ "feature/**" ]
-
-jobs:
-  create:
-    name: Create Database
-    runs-on: ubuntu-latest
-    env:
+  env:
       OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
       OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
       OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
       OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
       OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
+jobs:
+  create:
+    name: Create Database
+    runs-on: ubuntu-latest
+    env:
       OP_DEF_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
       BRANCH_REF: ${{ github.event.ref }}
       COMPARTMENT_OCID: ${{ secrets.OCI_COMPARTMENT_OCID }}
@@ -84,23 +84,23 @@ jobs:
     needs: create
     env:
       DB_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
-      OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
-      OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
-      OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
-      OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
-      OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
       DB_WALLET_PWD: ${{ secrets.DB_WALLET_PASSWORD }}
       DB_OCID: ${{ needs.create.outputs.dbocid }} 
 
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+    
+    - name: test
+      run: |-
+        echo "$DB_OCID" "$DB_WALLET_PWD" > 1.md
+        cat 1.md
 
     - name: Download Wallet
       uses: oracle-actions/run-oci-cli-command@v1.1.1
       id: download-database-wallet
       with:
-        command: "db autonomous-database generate-wallet --autonomous-database-id $DB_OCID --password $DB_WALLET_PWD --file wallet.zip"
+        command: "db autonomous-database generate-wallet --autonomous-database-id $DB_OCID --password $DB_WALLET_PWD --file wallet.zip --debug"
         silent: false
 
     # Download SQLCL
