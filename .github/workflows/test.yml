@@ -16,8 +16,5 @@ jobs:
       DBPWD: ${{ secrets.DB_WALLET_PASSWORD }}
     steps:
       - name: Retrieve the OCID of a named compartment in tenancy
-        uses: oracle-actions/run-oci-cli-command@v1.1.1
-        id: find-compartment-id
-        with:
-          command: "db autonomous-database generate-wallet --autonomous-database-id $DBOCID --password $DBPWD --file wallet.zip --debug"
-          silent: false
+        run: |-
+          echo "Push!"
