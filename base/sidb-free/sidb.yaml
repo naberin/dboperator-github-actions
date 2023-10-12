@@ -9,6 +9,9 @@ metadata:
   name: freedb-
 spec:
   
+  # Setup with LoadBalancer
+  loadbalancer: true
+
   ## Use only alphanumeric characters for sid
   sid: FREE
   
