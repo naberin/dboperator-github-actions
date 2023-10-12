@@ -23,7 +23,7 @@ jobs:
 
       - name: Retrieve DBName
         id: getname
-        run: echo "idname=$(python get.py "$BRANCH_REF")" >> "$GITHUB_OUTPUT"
+        run: echo "idname=$(python scripts/run_util id "$BRANCH_REF")" >> "$GITHUB_OUTPUT"
 
       # Get the GKE credentials so we can deploy to the cluster
       - name: Configure Kubectl
@@ -35,5 +35,5 @@ jobs:
       # Run Kubectl commands to delete adb and namespace
       - name: Delete resources
         run: |-
-          kubectl delete adb adb-${{ steps.getname.outputs.idname }} -n ft-${{ steps.getname.outputs.idname }}
-          kubectl delete namespace ft-${{ steps.getname.outputs.idname }}
+          kubectl delete singleinstancedatabase freedb-${{ steps.getname.outputs.idname }} -n feature-${{ steps.getname.outputs.idname }}
+          kubectl delete namespace feature-${{ steps.getname.outputs.idname }}
