@@ -52,8 +52,8 @@ jobs:
      # Create Namespace and Secret
     - name: Create Kubernetes resources
       run: |-
-        kubectl create namespace ft-${{ steps.getname.outputs.idname }}
-        kubectl create secret -n ft-${{ steps.getname.outputs.idname }} generic default-admin-password --from-literal=oracle_pwd="$OP_DEF_PWD"
+        kubectl create namespace feature-${{ steps.getname.outputs.idname }}
+        kubectl create secret -n feature-${{ steps.getname.outputs.idname }} generic default-admin-password --from-literal=oracle_pwd="$OP_DEF_PWD"
 
     # Run Kustomize and Deploy
     - name: Deploy SIDB Free
