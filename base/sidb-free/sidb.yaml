@@ -10,7 +10,7 @@ metadata:
 spec:
   
   # Setup with LoadBalancer
-  loadbalancer: true
+  loadBalancer: true
 
   ## Use only alphanumeric characters for sid
   sid: FREE
