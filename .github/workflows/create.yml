@@ -27,9 +27,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Retrieve DBName
+    - name: Retrieve ID
       id: getname
-      run: echo "idname=$(python get.py "$BRANCH_REF")" >> "$GITHUB_OUTPUT"
+      run: echo "idname=$(python scripts/run_util.py id "$BRANCH_REF")" >> "$GITHUB_OUTPUT"
 
     # Set up kustomize
     - name: Set up Kustomize
@@ -53,60 +53,52 @@ jobs:
     - name: Create Kubernetes resources
       run: |-
         kubectl create namespace ft-${{ steps.getname.outputs.idname }}
-        kubectl create secret -n ft-${{ steps.getname.outputs.idname }} generic default-admin-password --from-literal=default-admin-password="$OP_DEF_PWD"
+        kubectl create secret -n ft-${{ steps.getname.outputs.idname }} generic default-admin-password --from-literal=oracle_pwd="$OP_DEF_PWD"
 
     # Run Kustomize and Deploy
-    - name: Deploy ADB
+    - name: Deploy SIDB Free
       run: |-
-        ./generate.sh
         kustomize create --resources base
         kustomize edit set namesuffix ${{ steps.getname.outputs.idname }}
-        kustomize edit add patch --path patch.yaml --kind AutonomousDatabase
-        kustomize edit set namespace ft-${{ steps.getname.outputs.idname }}
+        kustomize edit set namespace feature-${{ steps.getname.outputs.idname }}
         kustomize build . | kubectl apply -f -
-        mv patch.yaml "$RUNNER_TEMP/patch.yaml"
 
     # Wait for database to get ready
     - name: Wait for Database
       id: getready
       run: |-
-        ./query-for-db.sh ${{ steps.getname.outputs.idname }}
+        ./scripts/checkdb.sh ${{ steps.getname.outputs.idname }}
 
-    - name: Retrieve DBOCID
-      id: getocid
-      run: |-
-        echo "dbocid=$(kubectl get adb adb-${{ steps.getname.outputs.idname }} -n ft-${{ steps.getname.outputs.idname }} -o 'jsonpath={.spec.details.compartmentOCID}')" >> "$GITHUB_OUTPUT"
+  # # Get DB OCID
+  # setup:
+  #   name: Setup Database
+  #   runs-on: ubuntu-latest
+  #   needs: create
+  #   env:
+  #     DB_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
+  #     DB_WALLET_PWD: ${{ secrets.DB_WALLET_PASSWORD }}
+  #     DB_OCID: ${{ needs.create.outputs.dbocid }}
+  #     OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
+  #     OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
+  #     OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
+  #     OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
+  #     OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
 
-  # Get DB OCID
-  setup:
-    name: Setup Database
-    runs-on: ubuntu-latest
-    needs: create
-    env:
-      DB_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
-      DB_WALLET_PWD: ${{ secrets.DB_WALLET_PASSWORD }}
-      DB_OCID: ${{ needs.create.outputs.dbocid }}
-      OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
-      OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
-      OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
-      OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
-      OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v3
     
-    - name: test
-      run: |-
-        echo "$DB_OCID" "$DB_WALLET_PWD" > 1.md
-        cat 1.md
+  #   - name: test
+  #     run: |-
+  #       echo "$DB_OCID" "$DB_WALLET_PWD" > 1.md
+  #       cat 1.md
 
-    - name: Download Wallet
-      uses: oracle-actions/run-oci-cli-command@v1.1.1
-      id: download-database-wallet
-      with:
-        command: "db autonomous-database generate-wallet --autonomous-database-id $DB_OCID --password $DB_WALLET_PWD --file wallet.zip --debug"
-        silent: false
+  #   - name: Download Wallet
+  #     uses: oracle-actions/run-oci-cli-command@v1.1.1
+  #     id: download-database-wallet
+  #     with:
+  #       command: "db autonomous-database generate-wallet --autonomous-database-id $DB_OCID --password $DB_WALLET_PWD --file wallet.zip --debug"
+  #       silent: false
 
     # Download SQLCL
     # - name: "Download SQLCL"
