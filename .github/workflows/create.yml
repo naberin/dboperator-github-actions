@@ -87,15 +87,18 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    - name: "List"
+      run: ls -al && pwd
+
     # Run LB
     - name: "Run admin"
       uses: liquibase-github-actions/update@v4.23.2
       with:
         changelogFile: "changelog.xml"
         url: ${{ format('jdbc:oracle:thin:@//{0}', env.DB_IP) }}
+        driver: "oracle"
         username: "sys as sysdba"
         password: ${{ env.DB_PWD }}
+        searchPath: "/github/workspace/liquibase/admin"
 
     # Loop through Schemas
-    
-  - 
