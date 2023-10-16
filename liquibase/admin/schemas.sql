@@ -1,12 +1,13 @@
 -- liquibase formatted sql
 
--- changeset gotsysdba:1 runAlways:true endDelimiter:/
+-- changeset createSchemas runAlways:true endDelimiter:/
 DECLARE
   L_CONN_USER   VARCHAR2(255);
   L_USER	    VARCHAR2(255);
   L_TBLSPACE    VARCHAR2(255);
+  
   type v_array is varray(2) of varchar2(10);
-  array schmeas_array := v_array('schema_a', 'schema_b');
+  array schemas_array := v_array('schema_a', 'schema_b');
 BEGIN
     SELECT USER INTO L_CONN_USER FROM DUAL;
     
