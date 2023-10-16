@@ -96,7 +96,6 @@ jobs:
       with:
         changelogFile: "changelog.xml"
         url: ${{ format('jdbc:oracle:thin:@//{0}', env.DB_IP) }}
-        driver: "oracle"
         username: "sys as sysdba"
         password: ${{ env.DB_PWD }}
         searchPath: "/github/workspace/liquibase/admin"
