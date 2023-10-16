@@ -16,7 +16,6 @@ def get_feature_name(listing):
         if x.startswith("feature"):
             return x
 
-
 def get_identification(from_feature_name):
     # expects identification to be after feature
 

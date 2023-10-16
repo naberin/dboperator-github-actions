@@ -21,7 +21,7 @@ jobs:
 
     outputs:
       idname: ${{ steps.getname.outputs.idname }}
-      dbocid: ${{ steps.getocid.outputs.dbocid }}
+      ipaddress: ${{ steps.getaddress.outputs.ipaddress }}
 
     steps:
     - name: Checkout
@@ -68,6 +68,10 @@ jobs:
       id: getready
       run: |-
         ./scripts/checkdb.sh ${{ steps.getname.outputs.idname }}
+    
+    - name: Retrieve IP
+      id: getaddress
+      run: echo "ipaddress=$(kubectl get -n feature-${{ steps.getname.outputs.idname }} singleinstancedatabase freedb-${{ steps.getname.outputs.idname }} -o 'jsonpath={.status.pdbConnectString}')" >> "$GITHUB_OUTPUT"
 
   # Get DB OCID
   setup:
@@ -77,23 +81,25 @@ jobs:
     env:
       DB_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
       DB_USER: ${{ secrets.DB_WALLET_PASSWORD }}
-      DB_IP: ${{ needs.create.outputs.dbocid }}
+      DB_IP: ${{ needs.create.outputs.ipaddress }}
 
     steps:
     - name: Checkout
       uses: actions/checkout@v3
 
     # Run LB
-    # - name: "Run admin"
-    #   uses: liquibase-github-actions/update@v4.23.2
-    #   with:
-    #     changelogFile: "liquibase/changelog.yaml"
-    #     url: ""
+    - name: "Run admin"
+      uses: liquibase-github-actions/update@v4.23.2
+      with:
+        changelogFile: "liquibase/admin/changelog.xml"
+        url: "jdbc:oracle:thin:@$DB_IP"
+        username: "sys as sysdba"
+        password: "$DB_PWD"
 
     # Download SQLCL
     # - name: "Download SQLCL"
     #   run: |-
-    #     echo ${{ needs.create.outputs.dbocid }}
+    #     echo ${{ needs.create.outputs.ipaddress }}
 
 
       
