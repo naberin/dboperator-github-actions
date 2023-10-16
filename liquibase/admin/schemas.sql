@@ -6,26 +6,29 @@ DECLARE
   L_USER	    VARCHAR2(255);
   L_TBLSPACE    VARCHAR2(255);
   
-  type v_array is varray(2) of varchar2(10);
-  array schemas_array := v_array('schema_a', 'schema_b');
+  TYPE Listing is TABLE OF VARCHAR2(25);
+  SchemaListing Listing := Listing('schema_a', 'schema_b');
+  
+
 BEGIN
     SELECT USER INTO L_CONN_USER FROM DUAL;
     
-    for i in 1..schemas_array.count loop
+    for i in SchemaListing.FIRST .. SchemaListing.LAST loop
         
-        -- create the user
-        execute immediate 'CREATE USER "' || array(i) || '" NO AUTHENTICATION';
+        -- create the schema
+        execute immediate 'CREATE USER "' || SchemaListing(i) || '" NO AUTHENTICATION';
 
         -- grants
-        execute immediate 'ALTER USER "' || array(i) || '" GRANT CONNECT THROUGH '|| L_CONN_USER;
-        SELECT DEFAULT_TABLESPACE INTO L_TBLSPACE FROM DBA_USERS WHERE USERNAME=array(i);
-        execute immediate 'ALTER USER "' || array(i) || '" QUOTA UNLIMITED ON '|| L_TBLSPACE;
-        execute immediate 'GRANT CONNECT TO "' || array(i) || '"';
-        execute immediate 'GRANT RESOURCE TO "' || array(i) || '"';
-        execute immediate 'ALTER USER "' || array(i) || '" DEFAULT ROLE CONNECT,RESOURCE';
+        execute immediate 'ALTER USER "' || SchemaListing(i) || '" GRANT CONNECT THROUGH '|| L_CONN_USER;
+        SELECT DEFAULT_TABLESPACE INTO L_TBLSPACE FROM DBA_USERS WHERE USERNAME=SchemaListing(i);
+        execute immediate 'ALTER USER "' || SchemaListing(i) || '" QUOTA UNLIMITED ON '|| L_TBLSPACE;
+        execute immediate 'GRANT CONNECT TO "' || SchemaListing(i) || '"';
+        execute immediate 'GRANT RESOURCE TO "' || SchemaListing(i) || '"';
+        execute immediate 'ALTER USER "' || SchemaListing(i) || '" DEFAULT ROLE CONNECT,RESOURCE';
     end loop;
     
 END;
 /
 
 --rollback drop user "schema_a" cascade;
+--rollback drop user "schema_b" cascade;
