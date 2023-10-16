@@ -91,10 +91,11 @@ jobs:
     - name: "Run admin"
       uses: liquibase-github-actions/update@v4.23.2
       with:
-        changelogFile: "liquibase/admin/changelog.xml"
+        changelogFile: "changelog.xml"
         url: ${{ format('jdbc:oracle:thin:@//{0}', env.DB_IP) }}
         username: "sys as sysdba"
         password: ${{ env.DB_PWD }}
 
     # Loop through Schemas
-      
+    
+  - 
