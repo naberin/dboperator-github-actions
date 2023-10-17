@@ -6,8 +6,5 @@ CREATE USER admin identified by ${adminPassword};
 -- create the schema
 GRANT CONNECT, RESOURCE to admin;
 GRANT UNLIMITED TABLESPACE to admin;
-    
-END;
-/
 
---rollback drop user "admin" cascade;
+--rollback drop user "admin" cascade; 
