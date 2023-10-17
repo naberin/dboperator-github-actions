@@ -11,6 +11,7 @@ DECLARE
   
 
 BEGIN
+
     SELECT USER INTO L_CONN_USER FROM DUAL;
     
     for i in SchemaListing.FIRST .. SchemaListing.LAST loop

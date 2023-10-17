@@ -90,13 +90,24 @@ jobs:
     - name: "List"
       run: ls -al && pwd
 
-    # Run LB
+    # Run LB as sys
     - name: "Run admin"
       uses: liquibase-github-actions/update@v4.23.2
       with:
         changelogFile: "changelog.xml"
         url: ${{ format('jdbc:oracle:thin:@//{0}', env.DB_IP) }}
         username: "sys as sysdba"
+        password: ${{ env.DB_PWD }}
+        adminPassword: ${{ env.DB_PWD }}
+        searchPath: "/github/workspace/liquibase/sys"
+
+    # Run LB as admin
+    - name: ""
+      uses: liquibase-github-actions/update@v4.23.2
+      with:
+        changelogFile: "changelog.xml"
+        url: ${{ format('jdbc:oracle:thin:@//{0}', env.DB_IP) }}
+        username: "admin"
         password: ${{ env.DB_PWD }}
         searchPath: "/github/workspace/liquibase/admin"
 
