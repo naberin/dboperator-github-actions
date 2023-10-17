@@ -8,5 +8,5 @@
         http://www.liquibase.org/xml/ns/pro
         http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd "
 >
-    <include file="createAdmin.sql">
+    <include file="createAdmin.sql" />
 </databaseChangeLog>

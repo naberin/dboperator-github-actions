@@ -91,7 +91,7 @@ jobs:
       run: ls -al && pwd
 
     # Run LB as sys
-    - name: "Run admin"
+    - name: "Run LB as sys"
       uses: liquibase-github-actions/update@v4.23.2
       with:
         changelogFile: "changelog.xml"
@@ -102,7 +102,7 @@ jobs:
         searchPath: "/github/workspace/liquibase/sys"
 
     # Run LB as admin
-    - name: ""
+    - name: "Run LB as admin"
       uses: liquibase-github-actions/update@v4.23.2
       with:
         changelogFile: "changelog.xml"
