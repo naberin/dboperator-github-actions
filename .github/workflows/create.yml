@@ -99,5 +99,3 @@ jobs:
         username: "system"
         password: ${{ env.DB_PWD }}
         searchPath: "/github/workspace/liquibase/admin"
-
-    - name: "Run LB"

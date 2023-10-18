@@ -35,5 +35,5 @@ jobs:
       # Run Kubectl commands to delete adb and namespace
       - name: Delete resources
         run: |-
-          kubectl delete singleinstancedatabase freedb-${{ steps.getname.outputs.idname }} -n feature-${{ steps.getname.outputs.idname }}
+          kubectl delete singleinstancedatabase db-${{ steps.getname.outputs.idname }} -n feature-${{ steps.getname.outputs.idname }}
           kubectl delete namespace feature-${{ steps.getname.outputs.idname }}
