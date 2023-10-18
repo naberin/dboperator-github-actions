@@ -78,9 +78,6 @@ jobs:
     name: Setup Database Schemas
     runs-on: ubuntu-latest
     needs: create
-    strategy:
-      matrix:
-        schemas: ["schema_a", "schema_b"]
     env:
       DB_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
       DB_USER: ${{ secrets.DB_WALLET_PASSWORD }}
@@ -100,6 +97,22 @@ jobs:
         password: ${{ env.DB_PWD }}
         searchPath: "/github/workspace/liquibase/admin"
 
+  # Setup Tables
+  setup_tables:
+    name: Setup Database Schemas
+    runs-on: ubuntu-latest
+    needs: setup_users
+    strategy:
+      matrix:
+        schemas: ["schema_a", "schema_b"]
+    env:
+      DB_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
+      DB_USER: ${{ secrets.DB_WALLET_PASSWORD }}
+      DB_IP: ${{ needs.create.outputs.ipaddress }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
     - name: "Run LB as User"
       uses: liquibase-github-actions/update@v4.23.2
       with:
@@ -107,4 +120,4 @@ jobs:
         url: ${{ format('jdbc:oracle:thin:@//{0}', env.DB_IP) }}
         username: ${{ format('system[{0}]', matrix.schemas) }}
         password: ${{ env.DB_PWD }}
-        searchPath: ${{ format('/github/workspace/liquibase/{0}', matrix.schemas) }}
+        searchPath: ${{ format('/github/workspace/liquibase/{0}', matrix.schemas) }}z

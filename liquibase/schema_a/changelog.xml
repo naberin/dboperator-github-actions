@@ -8,8 +8,10 @@
         http://www.liquibase.org/xml/ns/pro
         http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd ">
 
-    <include file="employees.sql" />
     <include file="departments.sql" />
     <include file="departments_lookup.sql" />
+    <!-- employees has a foreign key constraint on departments -->
+    <include file="employees.sql" />
+    
 
 </databaseChangeLog>

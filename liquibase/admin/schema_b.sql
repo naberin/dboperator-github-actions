@@ -1,6 +1,6 @@
 -- liquibase formatted sql
 
--- changeset liquibase:1
+-- changeset liquibase:2
 CREATE USER "SCHEMA_B" NO AUTHENTICATION;
 ALTER USER "SCHEMA_B" GRANT CONNECT THROUGH SYSTEM;
 GRANT UNLIMITED TABLESPACE TO "SCHEMA_B";
