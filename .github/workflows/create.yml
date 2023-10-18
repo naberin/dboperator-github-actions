@@ -99,7 +99,7 @@ jobs:
 
   # Setup Tables
   setup_tables:
-    name: Setup Database Schemas
+    name: Setup Database Tables
     runs-on: ubuntu-latest
     needs: setup_users
     strategy:
