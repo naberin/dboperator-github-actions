@@ -120,4 +120,4 @@ jobs:
         url: ${{ format('jdbc:oracle:thin:@//{0}', env.DB_IP) }}
         username: ${{ format('system[{0}]', matrix.schemas) }}
         password: ${{ env.DB_PWD }}
-        searchPath: ${{ format('/github/workspace/liquibase/{0}', matrix.schemas) }}z
+        searchPath: ${{ format('/github/workspace/liquibase/{0}', matrix.schemas) }}
