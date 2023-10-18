@@ -2,8 +2,8 @@ name: Cleanup feature branch deletion
 
 on:
   delete:
-    branches: [ "feature/**" ]
-
+    branches: 
+      - 'feature/**'
 jobs:
   cleanup:
     name: Cleanup Resources on OKE

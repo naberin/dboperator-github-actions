@@ -3,7 +3,8 @@ name: Create Isolated Database
 
 on:
   create:
-    branches: [ "feature/**" ]
+    branches: 
+      - 'feature/**'
 
 jobs:
   create:
@@ -101,7 +102,7 @@ jobs:
   setup_tables:
     name: Setup Database Tables
     runs-on: ubuntu-latest
-    needs: setup_users
+    needs: [setup_users, create]
     strategy:
       matrix:
         schemas: ["schema_a", "schema_b"]
