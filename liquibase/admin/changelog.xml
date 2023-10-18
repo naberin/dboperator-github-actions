@@ -8,6 +8,6 @@
         http://www.liquibase.org/xml/ns/pro
         http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd ">
 
-    <include file="schemas.xml" />
+    <include file="schema_a.sql" />
 
 </databaseChangeLog>
