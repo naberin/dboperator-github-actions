@@ -13,7 +13,7 @@ spec:
   loadBalancer: true
 
   ## Use only alphanumeric characters for sid
-  sid: DBFEATURE
+  sid: FREE
   
   ## DB edition
   edition: free
