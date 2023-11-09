@@ -26,7 +26,7 @@ jobs:
     needs: [prep_matrix]
     strategy:
       matrix:
-        schemas: ${{ needs.prep_matrix.outputs.schemas }}
+        schemas: ${{ fromJson(needs.prep_matrix.outputs.schemas) }}
 
     steps:
     - name: List
