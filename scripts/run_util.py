@@ -1,8 +1,13 @@
 import sys
 import re
 import sys
+import os
 
 
+
+def list_schemas(location):
+    return [ x.lstrip('./') for x in [ x[0] for x in os.walk(location) if x[0] != "." ] if x not in ['./admin'] ]
+    
 
 def clean(with_name):
     # used for database name
@@ -34,3 +39,5 @@ elif command == "id":
     names = get_feature_name(sys.argv[2:])
     ident = get_identification(names)
     print(ident)
+elif command == "schemas""
+    print(list_schemas(sys.argv[2]))

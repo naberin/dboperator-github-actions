@@ -1,0 +1,31 @@
+
+name: Run Test
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  prep_matrix:
+    outputs:
+      schemas: ${{ steps.getschemas.outputs.schemas }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    steps:
+    - name: list
+      id: getschemas
+      run: echo "schemas=$(python scripts/run_util.py schemas /github/workspace/liquibase)" >> "$GITHUB_OUTPUT"
+      
+  test-push:
+    name: Run command
+    runs-on: ubuntu-latest
+    needs: [prep_matrix]
+    strategy:
+      matrix:
+        schemas: ${{ needs.prep_matrix.outputs.schemas }}
+
+    - name: List
+      run: echo ${{ matrix.schemas }}
