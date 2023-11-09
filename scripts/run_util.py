@@ -6,7 +6,7 @@ import os
 
 
 def list_schemas(location):
-    return [ x.lstrip('./') for x in [ x[0] for x in os.walk(location) if x[0] != "." ] if x not in ['./admin'] ]
+    return [ x.lstrip(location+'/') for x in [ x[0] for x in os.walk(location) if x[0] != "." ] if x not in ['./admin'] ]
     
 
 def clean(with_name):
