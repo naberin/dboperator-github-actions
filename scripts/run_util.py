@@ -9,7 +9,7 @@ import json
 def list_schemas(location):
     d = [ x.removeprefix(f'{location}/') for x in [x[0] for x in os.walk(location) if x[0] != location ] ]
     d.remove("admin")
-    return json.dumps(d)
+    return json.dumps({"schemas": d})
     
 
 def clean(with_name):
