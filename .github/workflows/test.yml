@@ -18,7 +18,7 @@ jobs:
 
     - name: list
       id: getschemas
-      run: echo "schemas=$(python scripts/run_util.py schemas /github/workspace/liquibase)" >> "$GITHUB_OUTPUT"
+      run: echo "schemas=$(python scripts/run_util.py schemas liquibase)" >> "$GITHUB_OUTPUT"
       
   test_push:
     name: Run command
