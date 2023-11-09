@@ -8,6 +8,8 @@ on:
 
 jobs:
   prep_matrix:
+    name: Run Prep
+    runs-on: ubuntu-latest
     outputs:
       schemas: ${{ steps.getschemas.outputs.schemas }}
     steps:
@@ -19,7 +21,7 @@ jobs:
       id: getschemas
       run: echo "schemas=$(python scripts/run_util.py schemas /github/workspace/liquibase)" >> "$GITHUB_OUTPUT"
       
-  test-push:
+  test_push:
     name: Run command
     runs-on: ubuntu-latest
     needs: [prep_matrix]
