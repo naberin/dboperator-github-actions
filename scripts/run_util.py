@@ -39,5 +39,5 @@ elif command == "id":
     names = get_feature_name(sys.argv[2:])
     ident = get_identification(names)
     print(ident)
-elif command == "schemas""
+elif command == "schemas":
     print(list_schemas(sys.argv[2]))
