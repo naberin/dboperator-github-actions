@@ -16,7 +16,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    steps:
     - name: list
       id: getschemas
       run: echo "schemas=$(python scripts/run_util.py schemas /github/workspace/liquibase)" >> "$GITHUB_OUTPUT"
@@ -29,5 +28,6 @@ jobs:
       matrix:
         schemas: ${{ needs.prep_matrix.outputs.schemas }}
 
+    steps:
     - name: List
       run: echo ${{ matrix.schemas }}
