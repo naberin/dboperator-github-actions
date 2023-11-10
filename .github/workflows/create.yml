@@ -83,6 +83,8 @@ jobs:
       DB_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
       DB_USER: ${{ secrets.DB_WALLET_PASSWORD }}
       DB_IP: ${{ needs.create.outputs.ipaddress }}
+    outputs:
+      schemas: ${{ steps.getschemas.outputs.schemas }}
 
     steps:
     - name: Checkout
@@ -97,6 +99,11 @@ jobs:
         username: "system"
         password: ${{ env.DB_PWD }}
         searchPath: "/github/workspace/liquibase/admin"
+        
+    # List Schemas
+    - name: "List Schemas to Loop Through"
+      id: getschemas
+      run: echo "schemas=$(python scripts/run_util.py schemas liquibase)" >> "$GITHUB_OUTPUT"
 
   # Setup Tables
   setup_tables:
@@ -104,8 +111,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [setup_users, create]
     strategy:
-      matrix:
-        schemas: ["schema_a", "schema_b"]
+      matrix: ${{ fromJson(needs.setup_users.outputs.schemas) }}
     env:
       DB_PWD: ${{ secrets.FT_DEFAULT_ADMIN_PASSWORD }}
       DB_USER: ${{ secrets.DB_WALLET_PASSWORD }}
